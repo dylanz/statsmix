@@ -406,7 +406,7 @@ class StatsMix
   def self.set_form_data(params, sep = '&')
     @request.body = params.map {|k,v|
       if v.instance_of?(Array)
-        v.map {|e| "#{self.urlencode(k.to_s)}[]=#{urlencode(e.to_s)}"}.join(sep)
+        v.map {|e| "#{self.urlencode(k.to_s)}[]=#{self.urlencode(e.to_s)}"}.join(sep)
       else
         "#{self.urlencode(k.to_s)}=#{self.urlencode(v.to_s)}"
       end
@@ -415,9 +415,7 @@ class StatsMix
   end
 
   def self.urlencode(str)
-    str.gsub(/[^a-zA-Z0-9_\{\}:, \"\.\-]/n) {|s| 
-      sprintf('%%%02x', s[0]) 
-    }
+    str.to_s.gsub(/[^a-zA-Z0-9_\-.]/n){ sprintf("%%%02X", $&.unpack("C")[0]) }
   end
   
   def self.check_meta
